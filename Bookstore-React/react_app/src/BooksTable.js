@@ -24,14 +24,6 @@ export default function BooksTable() {
 
         const response = await fetch('http://localhost:8080/all', { method: 'GET' });
 
-        // if (!response.ok) {
-        //   if (response.status === 503) {
-        //     throw new Error('Failed to fetch data from the server. The server might be down.');
-        //   } else {
-        //     throw new Error('Failed to fetch data from the server.');
-        //   }
-        // }
-
         if (!response.ok) {
           throw new Error('Failed to get the list of books');
         }
@@ -69,14 +61,6 @@ export default function BooksTable() {
           }
 
           const response = await fetch(`http://localhost:8080/delete/${title}`, { method: 'DELETE' });
-
-          // if (!response.ok) {
-          //   if (response.status === 503) {
-          //     throw new Error('Failed to fetch data from the server. The server might be down.');
-          //   } else {
-          //     throw new Error('Failed to fetch data from the server.');
-          //   }
-          // }
 
           if (!response.ok) {
             throw new Error('Failed to delete the book');

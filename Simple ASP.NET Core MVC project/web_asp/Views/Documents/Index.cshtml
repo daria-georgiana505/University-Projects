@@ -1,0 +1,190 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<web_asp.Models.Document>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        .filter-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="filter-container">
+    <label for="typeFilter">Filter by Type:</label>
+    <select id="typeFilter">
+        <option value="">All</option>
+        @foreach (var type in Enum.GetValues(typeof(web_asp.Enums.DocumentType)))
+        {
+            var displayName = ((DisplayAttribute)type.GetType().GetField(type.ToString())
+            .GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault())?.Name ?? type.ToString();
+            <option value="@type">@displayName</option>
+        }
+    </select>
+</div>
+
+<div class="filter-container">
+    <label for="formatFilter">Filter by Format:</label>
+    <select id="formatFilter">
+        <option value="">All</option>
+        @foreach (var format in Enum.GetValues(typeof(web_asp.Enums.DocumentFormat)))
+        {
+            var displayName = ((DisplayAttribute)format.GetType().GetField(format.ToString())
+            .GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault())?.Name ?? format.ToString();
+            <option value="@format">@displayName</option>
+        }
+    </select>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NrPages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Format)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="documentList">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NrPages)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Format)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#typeFilter, #formatFilter').change(function () {
+                var typeFilter = $('#typeFilter').val();
+                var formatFilter = $('#formatFilter').val();
+                $.ajax({
+                    url: '/Documents/Filter',
+                    type: 'GET',
+                    data: { typeFilter: typeFilter, formatFilter: formatFilter },
+                    success: function (data) {
+                        $('#documentList').empty().html(data);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model IEnumerable<web_asp.Models.Document>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NrPages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Format)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NrPages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Format)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+ *@
